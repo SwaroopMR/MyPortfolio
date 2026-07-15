@@ -189,7 +189,7 @@ async function fetchGitHubData() {
                             </div>
                         </div>
                         <h3 class="card-title">${repo.name}</h3>
-                        <p class="card-description">${repo.description || "No description provided. Click the external link to view the code repository."}</p>
+                        <p class="card-description">${getRepoDescription(repo)}</p>
                     </div>
                     <div class="card-meta">
                         <span class="lang-indicator">
@@ -252,6 +252,27 @@ function getLanguageColor(lang) {
         "Shell": "#89e051"
     };
     return colors[lang] || "#8b5cf6"; // Default violet accent
+}
+
+// Helper: Custom fallback descriptions for GitHub repositories
+function getRepoDescription(repo) {
+    if (repo.description && repo.description.trim() !== "") {
+        return repo.description;
+    }
+    
+    const fallbacks = {
+        "myportfolio": "A professional developer portfolio website featuring a dark-mode glassmorphic aesthetic, custom CSS styling, and real-time GitHub API integration.",
+        "team-c-adventurers": "A collaborative web application developed by Team C, focusing on responsive layout design, interactive user experiences, and modern web standards.",
+        "recipe-management-system": "A web application designed to search, browse, and organize cooking recipes. Built with interactive recipe cards and categorization tools.",
+        "stoneage-number-quest": "An engaging, prehistoric-themed educational game designed to teach math and number skills through interactive puzzles.",
+        "virtual-drum-kit": "An interactive audio application that simulates a real drum set. Playable using keyboard triggers or click events, built with TypeScript.",
+        "lost-and-found-management-system": "A secure full-stack Java MVC platform utilizing JSP, Servlets, and MySQL for registering, tracking, and claiming lost items.",
+        "ai-driven-collision-detection-and-autonomous-emergency-response-system-for-automobiles": "A real-time machine learning and computer vision automobile safety system developed in Python and OpenCV for risk detection and simulated automated alerts.",
+        "raisin-type-classification": "An end-to-end Python machine learning pipeline implementing a Gaussian Naïve Bayes model to classify raisin types based on morphological features."
+    };
+
+    const key = repo.name.toLowerCase();
+    return fallbacks[key] || "A public software development repository. Click the external link to view the code and documentation.";
 }
 
 // ==========================================================================
