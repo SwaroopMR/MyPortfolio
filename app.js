@@ -48,6 +48,9 @@ const CONFIG = {
     ]
 };
 
+// Global Intersection Observer for scroll animation
+let revealObserver;
+
 // ==========================================================================
 // Initialize Portfolio Page & Populate Content
 // ==========================================================================
@@ -213,6 +216,13 @@ async function fetchGitHubData() {
         loadingElem.classList.add("hidden");
         reposContainer.classList.remove("hidden");
         lucide.createIcons(); // Initialize newly added icons
+
+        // Observe newly added elements if the observer is initialized
+        if (revealObserver) {
+            reposContainer.querySelectorAll(".reveal-element").forEach(elem => {
+                revealObserver.observe(elem);
+            });
+        }
 
     } catch (err) {
         console.error("GitHub Fetch Error: ", err);
@@ -381,7 +391,7 @@ function setupInteractiveFeatures() {
     }
 
     // 6. Intersection Observer - Fade-in On Scroll Elements
-    const revealObserver = new IntersectionObserver((entries, observer) => {
+    revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add("revealed");
@@ -401,8 +411,8 @@ function setupInteractiveFeatures() {
             revealObserver.observe(elem);
         });
         
-        // Also observe section titles and headers for reveal
-        document.querySelectorAll("section > *").forEach(child => {
+        // Also observe section titles and headers for reveal (excluding grid containers and status cards)
+        document.querySelectorAll("section > *:not(.repos-grid):not(.projects-grid):not(.showcase-status)").forEach(child => {
             child.classList.add("reveal-element");
             revealObserver.observe(child);
         });
